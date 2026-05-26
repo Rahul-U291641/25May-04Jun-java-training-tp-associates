@@ -1,0 +1,53 @@
+Online Food Delivery App — Microservices Architecture
+=========================================================
+Services
+--------
+    Auth Service → Login & JWT
+    User Service → User profile & address
+    Restaurant Service → Restaurant & menu details
+    Search Service → Search restaurants/food
+    Cart Service → Manage cart
+    Order Service → Create/manage orders
+    Payment Service → Payment handling
+    Delivery Service → Delivery tracking
+    Notification Service → SMS/Email notifications
+    Review Service → Ratings & reviews
+
+Database Per Service
+    Service	                                        Database
+    Auth/User/Order/Payment	                        PostgreSQL
+    Restaurant/Delivery/Notification	            MongoDB
+    Search	                                        Elasticsearch
+    Cart	                                        Redis
+    Review	                                        MongoDB
+
+Communication
+    REST API -> Used for direct communication.
+        Example:
+            Gateway → Auth
+            Cart → Restaurant
+            Order → Payment
+    Kafka Events -> Used for async communication.
+        Example Events:
+            OrderCreated
+            PaymentSuccess
+            OrderDelivered
+        Consumers:
+            Notification Service
+            Delivery Service
+            Review Service
+    Services Using Kafka
+        Order Service
+        Payment Service
+        Delivery Service
+        Notification Service
+        Review Service
+Business Critical Services (If they fail, orders and payments stop.)
+    Order Service
+    Payment Service
+
+Failure Handling (If payment fails → cancel order. If delivery fails → notify customer.)
+    Retry mechanism
+    Circuit Breaker
+    Kafka Dead Letter Queue (DLQ)
+    Saga Pattern for rollback
