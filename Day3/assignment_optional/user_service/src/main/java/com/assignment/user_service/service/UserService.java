@@ -13,7 +13,7 @@ public class UserService {
     UserMapper userMapper;
 
     public UserResponse getUserById(String userId) {
-        // In a real application, you would fetch user details from a database or another service.
+        // In a real application, you would fetch user details from a database as a User Entity.
         // Here, we are returning a dummy user for demonstration purposes.
         User user = new User();
         user.setId(userId);
