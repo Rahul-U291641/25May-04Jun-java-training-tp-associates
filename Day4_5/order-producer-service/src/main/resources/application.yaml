@@ -1,0 +1,12 @@
+kind: Application
+
+spring:
+  application:
+    name: order-producer-service
+  kafka:
+    bootstrap-servers: localhost:9092
+server:
+  port: 8081
+topics:
+  string-topic: order-string-topic
+  json-topic: order-json-topic
