@@ -1,12 +1,20 @@
 kind: Application
 
+# Spring Boot application configuration for the Order Producer Service, including Kafka producer settings and topic names.
 spring:
   application:
     name: order-producer-service
   kafka:
     bootstrap-servers: localhost:9092
+    producer:
+      acks: all
+
+# Server configuration for the Order Producer Service, specifying the port number.
 server:
   port: 8081
+
+# Kafka topic names for the Order Producer Service, defining topics for string messages, JSON messages, and order status updates.
 topics:
   string-topic: order-string-topic
   json-topic: order-json-topic
+  status-topic: order-status-topic

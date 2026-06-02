@@ -27,4 +27,11 @@ public class OrderProducerController {
         return new ApiResponse<>("success", "Order created without ID and sent to Kafka!", order);
     }
 
+    @PostMapping("/with-status")
+    public ApiResponse<OrderEvent> createOrderWithStatus(@RequestBody OrderEvent order) {
+        // Logic to create an order with a status and send it to Kafka
+        orderProducerService.sendOrderToKafkaWithStatus(order);
+        return new ApiResponse<>("success", "Order created with status and sent to Kafka!", order);
+    }
+
 }

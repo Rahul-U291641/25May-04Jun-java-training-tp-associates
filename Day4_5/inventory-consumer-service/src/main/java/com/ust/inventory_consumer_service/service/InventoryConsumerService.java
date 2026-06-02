@@ -9,7 +9,7 @@ public class InventoryConsumerService {
 
     @KafkaListener(
             topics = "order-string-topic",
-            groupId = "notification-group",
+            groupId = "inventory-group",
             containerFactory = "stringKafkaListenerContainerFactory"
     )
     public void consumeOrderEvent(String message) {
@@ -18,15 +18,14 @@ public class InventoryConsumerService {
         // Here you can add code to update the inventory based on the order details
     }
 
-        @KafkaListener(
-                topics = "order-json-topic",
-                groupId = "notification-group",
-                containerFactory = "jsonKafkaListenerContainerFactory"
-        )
-        public void consumeOrderEvent(OrderEvent order) {
-            // Logic to process the received order event and update inventory
-            System.out.println("Received order event & Inventory updated : {" + order.toString() + "}");
-            // Here you can add code to update the inventory based on the order details
-        }
-
+    @KafkaListener(
+            topics = "order-json-topic",
+            groupId = "inventory-group",
+            containerFactory = "jsonKafkaListenerContainerFactory"
+    )
+    public void consumeOrderEvent(OrderEvent order) {
+        // Logic to process the received order event and update inventory
+        System.out.println("Received order event & Inventory updated : {" + order.toString() + "}");
+        // Here you can add code to update the inventory based on the order details
+    }
 }

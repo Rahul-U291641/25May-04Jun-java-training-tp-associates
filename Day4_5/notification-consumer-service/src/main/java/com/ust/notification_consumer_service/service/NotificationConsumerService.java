@@ -28,4 +28,19 @@ public class NotificationConsumerService {
         System.out.println("Received order json event & Notification sent : {" + order.toString()+ "}");
         // Here you can add code to send a notification, e.g., via email or SMS
     }
+
+    @KafkaListener(
+            topics = "order-status-topic",
+            groupId = "notification-group",
+            containerFactory = "stringKafkaListenerContainerFactory"
+    )
+    public void consumeOrderStatusEvent(String status) {
+        // Logic to process the received order status event and send a notification
+        if (status.equalsIgnoreCase("\"ORDER_DELIVERED\"")) {
+            System.out.println("Received DELIVERED status event & Notification sent : " + status);
+            // Here you can add code to send a notification, e.g., via email or SMS
+        } else {
+            System.out.println("Order still is in process: " + status);
+        }
+    }
 }
