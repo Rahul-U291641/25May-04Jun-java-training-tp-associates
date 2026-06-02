@@ -9,7 +9,7 @@ public class InventoryConsumerService {
 
     @KafkaListener(
             topics = "order-string-topic",
-            groupId = "inventory-group",
+            groupId = "notification-group",
             containerFactory = "stringKafkaListenerContainerFactory"
     )
     public void consumeOrderEvent(String message) {
@@ -20,7 +20,7 @@ public class InventoryConsumerService {
 
         @KafkaListener(
                 topics = "order-json-topic",
-                groupId = "inventory-group",
+                groupId = "notification-group",
                 containerFactory = "jsonKafkaListenerContainerFactory"
         )
         public void consumeOrderEvent(OrderEvent order) {

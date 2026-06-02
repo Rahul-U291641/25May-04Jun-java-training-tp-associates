@@ -1,3 +1,8 @@
 spring:
   application:
     name: inventory-consumer-service
+server:
+  port: 8083
+topics:
+  string-topic: order-string-topic
+  json-topic: order-json-topic
