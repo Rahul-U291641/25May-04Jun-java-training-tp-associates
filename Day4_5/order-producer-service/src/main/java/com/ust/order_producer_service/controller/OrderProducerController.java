@@ -16,7 +16,7 @@ public class OrderProducerController {
     @PostMapping("/{id}")
     public ApiResponse<Long> createOrder(@PathVariable Long id) {
         // Logic to create an order and send it to Kafka
-        //orderProducerService.sendOrderToKafka(id);
+        orderProducerService.sendOrderToKafka(id);
         return new ApiResponse<>("success", "Order created and sent to Kafka!", id);
     }
 

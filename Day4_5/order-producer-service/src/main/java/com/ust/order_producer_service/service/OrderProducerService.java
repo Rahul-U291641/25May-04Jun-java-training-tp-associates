@@ -14,7 +14,7 @@ public class OrderProducerService {
     public void sendOrderToKafka(Long id) {
         // Logic to create an order and send it to Kafka
         String orderMessage = "Order with ID: " + id + " has been created.";
-        kafkaTemplate.send(" order-string-topic", orderMessage);
+        kafkaTemplate.send("order-string-topic", orderMessage);
     }
 
     public void sendOrderToKafka(OrderEvent order) {
