@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: email-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: email-service-group
+      auto-offset-reset: earliest
+
+server:
+    port: 8083
+
+topics:
+    email-topic: booking-confirmation-topic
+
+kind: Application

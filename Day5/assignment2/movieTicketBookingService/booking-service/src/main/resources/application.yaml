@@ -1,0 +1,18 @@
+# Application configuration for the Booking Service, including Spring application settings, Kafka producer configurations, server port, and topic names.
+spring:
+  application:
+    name: booking-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      acks: all
+
+# Server configuration for the Booking Service, specifying the port number.
+server:
+  port: 8081
+
+# Kafka topic names for the Booking Service, defining a topic for string messages related to bookings.
+topics:
+  payment-topic: payment-json-topic
+
+kind: Application
