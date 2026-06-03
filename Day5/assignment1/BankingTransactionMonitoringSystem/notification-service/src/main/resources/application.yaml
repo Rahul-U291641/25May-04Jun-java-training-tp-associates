@@ -1,3 +1,16 @@
 spring:
   application:
     name: notification-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: transaction-alert-group
+      auto-offset-reset: earliest
+
+topics:
+  alert-topic: fraud-alert-topic
+
+server:
+  port: 8083
+
+kind: Application

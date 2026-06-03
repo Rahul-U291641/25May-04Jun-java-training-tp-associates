@@ -31,7 +31,7 @@ public class FraudDetectionService {
     public void isFraudulentTransaction(Transaction transaction) {
         // Simple fraud detection logic (for demonstration purposes)
         if (transaction.getAmount() > 50000) {
-            log.warn("Fraudulent transaction detected: " + transaction.toString());
+            log.warn("Fraudulent transaction detected and sent alert to kafka: " + transaction.toString());
             kafkaTemplate.send(alertTopic, "Fraudulent transaction detected: " + transaction.toString());
         } else {
             log.info("Transaction is not fraudulent: " + transaction.toString());
