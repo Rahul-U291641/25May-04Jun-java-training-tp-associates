@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: fraud-detection-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      acks: all
+    consumer:
+      group-id: fraud-detection-group
+      auto-offset-reset: earliest
+topics:
+  transaction-topic: transaction-json-topic
+  alert-topic: fraud-alert-topic
+
+server:
+  port: 8082
+
+kind: Application
