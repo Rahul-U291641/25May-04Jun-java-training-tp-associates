@@ -1,0 +1,43 @@
+# Spring Boot application configuration for a Kafka-based banking application.
+server:
+  port: 8081
+
+# Kafka configuration for the banking application, including bootstrap servers, consumer and producer settings.
+spring:
+  application:
+    name: bankingKafka
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: bankingGroup
+      auto-offset-reset: earliest
+      enable-auto-commit: false # Disable auto-commit to allow for manual acknowledgment of messages.
+    listener:
+      ack-mode: manual # Configure the listener to use manual acknowledgment mode for better control over message processing and error handling.
+
+# Custom application properties for the banking application, including Kafka topic names, consumer group IDs, retry settings, and fraud detection thresholds.
+bank:
+  kafka:
+    topics:
+      transaction: transactions-topic
+      dlt: transactions-dlt-topic
+      fraud: fraud-topic
+      success: transaction-success-topic
+
+    groups:
+      banking: banking-group
+      audit: audit-service-group
+      fraud: fraud-group
+      notification: notification-group
+      dlt: dlt-group
+
+    retry:
+      initial-interval: 1000
+      multiplier: 2
+      max-interval: 4000
+
+    fraud:
+      threshold: 50000
+
+# Additional application-specific configurations can be added here, such as database settings, logging, etc.
+kind: Application
