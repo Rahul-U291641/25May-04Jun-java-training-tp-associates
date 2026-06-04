@@ -44,4 +44,14 @@ public class KafkaConsumerConfig {
         factory.setCommonErrorHandler(errorHandler);
         return factory;
     }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, Transaction> dltKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, Transaction> factory = new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory());
+        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL);
+        // DLT consumer should NOT have error handler to prevent infinite loops
+        // Messages that fail here will be logged as errors but not re-sent to DLT
+        return factory;
+    }
 }

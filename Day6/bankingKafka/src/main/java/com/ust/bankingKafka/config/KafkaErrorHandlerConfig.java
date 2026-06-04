@@ -1,7 +1,9 @@
 package com.ust.bankingKafka.config;
 
+import com.ust.bankingKafka.exception.RetryableException;
 import com.ust.bankingKafka.model.Transaction;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.common.TopicPartition;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +15,7 @@ import org.springframework.util.backoff.ExponentialBackOff;
 
 @Configuration
 @RequiredArgsConstructor
+@Log4j2
 public class KafkaErrorHandlerConfig {
 
     @Value("${bank.kafka.topics.dlt}")
@@ -43,8 +46,22 @@ public class KafkaErrorHandlerConfig {
         backOff.setMultiplier(multiplier);
         backOff.setMaxInterval(maxInterval);
 
-        return new DefaultErrorHandler(
+        DefaultErrorHandler errorHandler = new DefaultErrorHandler(
                 recoverer,
                 backOff);
+
+        // CRITICAL: Only retry on RetryableException
+        // All other exceptions (including RuntimeException) will be sent directly to DLT
+        errorHandler.addNotRetryableExceptions(
+                RuntimeException.class  // Generic RuntimeException goes directly to DLT
+        );
+        // But explicitly make RetryableException retryable since it extends RuntimeException
+        errorHandler.addRetryableExceptions(
+                RetryableException.class  // This will be retried
+        );
+        
+        log.info("DefaultErrorHandler configured: max attempts=3, retryable=RetryableException, non-retryable=RuntimeException");
+        
+        return errorHandler;
     }
 }
