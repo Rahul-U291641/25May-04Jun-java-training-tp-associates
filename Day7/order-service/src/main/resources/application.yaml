@@ -1,0 +1,20 @@
+# Server Configurations
+server:
+  port: 8081
+
+# Spring & Kafka Configurations
+spring:
+  application:
+    name: order-service
+  kafka:
+    producer:
+      bootstrap-server: localhost:9092
+
+# Custom Configurations
+order:
+  kafka:
+    topics:
+      order: order-events
+
+    groups:
+      order: order-group
