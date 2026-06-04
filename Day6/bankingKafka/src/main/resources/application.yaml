@@ -33,8 +33,9 @@ bank:
 
     retry:
       initial-interval: 1000
-      multiplier: 2
-      max-interval: 4000
+      multiplier: 2.0
+      max-interval: 1000
+      max-attempts: 3
 
     fraud:
       threshold: 50000

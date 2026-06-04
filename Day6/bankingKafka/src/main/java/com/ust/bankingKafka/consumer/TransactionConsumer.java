@@ -21,11 +21,19 @@ public class TransactionConsumer {
             containerFactory = "jsonKafkaListenerContainerFactory"
     )
     public void consume(Transaction txn, Acknowledgment acknowledgment) {
+        String txnId = txn.getTransactionId();
+        
+        log.info("Processing transaction: {}", txnId);
+        
         // Process the transaction
+        // If exception is thrown, it will be caught by DefaultErrorHandler
+        // Exceptions will NOT trigger acknowledgment (offset stays unchanged)
+        // Error handler will then retry according to configuration
         service.process(txn);
-        // Manually acknowledge the message after processing
+        
+        // Only executed if service.process() succeeds
+        // Manual acknowledgment commits the offset
         acknowledgment.acknowledge();
-        // Log the consumed transaction
-        log.info("Consumed transaction: {}", txn.getTransactionId());
+        log.info("Successfully consumed transaction: {}", txnId);
     }
 }

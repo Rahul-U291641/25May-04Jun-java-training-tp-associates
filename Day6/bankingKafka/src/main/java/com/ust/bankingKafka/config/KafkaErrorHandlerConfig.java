@@ -12,6 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.util.backoff.ExponentialBackOff;
+import org.springframework.util.backoff.FixedBackOff;
 
 @Configuration
 @RequiredArgsConstructor
@@ -30,38 +31,41 @@ public class KafkaErrorHandlerConfig {
     @Value("${bank.kafka.retry.max-interval}")
     private long maxInterval;
 
+    @Value("${bank.kafka.retry.max-attempts}")
+    public int maxAttempts;
+
     @Bean
     public DefaultErrorHandler errorHandler(KafkaTemplate<String, Transaction> kafkaTemplate) {
 
-        DeadLetterPublishingRecoverer recoverer =
-                new DeadLetterPublishingRecoverer(
+        DeadLetterPublishingRecoverer recoverer = new DeadLetterPublishingRecoverer(
                         kafkaTemplate,
                         (record, ex) -> new TopicPartition(
                                 dltTopic,
-                                record.partition()));
+                                record.partition())
+        );
 
-        ExponentialBackOff backOff = new ExponentialBackOff();
-
-        backOff.setInitialInterval(initialInterval);
-        backOff.setMultiplier(multiplier);
+        ExponentialBackOff backOff = new ExponentialBackOff(initialInterval, multiplier);
         backOff.setMaxInterval(maxInterval);
+        backOff.setMaxAttempts(maxAttempts);
 
         DefaultErrorHandler errorHandler = new DefaultErrorHandler(
                 recoverer,
                 backOff);
 
-        // CRITICAL: Only retry on RetryableException
-        // All other exceptions (including RuntimeException) will be sent directly to DLT
-        errorHandler.addNotRetryableExceptions(
-                RuntimeException.class  // Generic RuntimeException goes directly to DLT
+        // CRITICAL: Handle PERMANENT failures (RuntimeException) - send immediately to DLT without retries
+        errorHandler.addNotRetryableExceptions(RuntimeException.class);
+
+        errorHandler.setRetryListeners(
+                ((record, ex, deliveryAttempt) -> {
+                    log.warn("Retry Attempts : {} for record offset = {}, partition = {} | Errors : {} ",
+                            deliveryAttempt,
+                            record.offset(),
+                            record.partition(),
+                            ex.getMessage());
+                })
         );
-        // But explicitly make RetryableException retryable since it extends RuntimeException
-        errorHandler.addRetryableExceptions(
-                RetryableException.class  // This will be retried
-        );
-        
-        log.info("DefaultErrorHandler configured: max attempts=3, retryable=RetryableException, non-retryable=RuntimeException");
         
         return errorHandler;
     }
 }
+
