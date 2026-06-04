@@ -1,6 +1,6 @@
 # Server Configurations
 server:
-  port: 8081
+  port: 8082
 
 # Spring & Kafka Configurations
 spring:
