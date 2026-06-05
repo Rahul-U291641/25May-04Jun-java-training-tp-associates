@@ -18,8 +18,10 @@ spring:
       hibernate:
         format_sql: true
   kafka:
+    bootstrap-server: localhost:9092
     producer:
-      bootstrap-server: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 # Custom Configurations
 order:

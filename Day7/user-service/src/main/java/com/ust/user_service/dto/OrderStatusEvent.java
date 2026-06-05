@@ -1,4 +1,4 @@
-package com.ust.order_service.dto;
+package com.ust.user_service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderRequest {
+public class OrderStatusEvent {
+    private Long orderId;
     private Long userId;
-    private String productName;
-    private int quantity;
+    private String status;
+    private String remark;
 }

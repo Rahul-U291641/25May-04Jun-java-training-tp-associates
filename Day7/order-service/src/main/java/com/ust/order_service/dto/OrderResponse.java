@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderRequest {
-    private Long userId;
-    private String productName;
-    private int quantity;
+public class OrderResponse {
+    private Long orderId;
+    private String status;
 }

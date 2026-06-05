@@ -1,22 +1,26 @@
 package com.ust.user_service.service;
 
+import com.ust.user_service.dto.OrderStatusEvent;
 import com.ust.user_service.dto.UserRequest;
 import com.ust.user_service.dto.UserResponse;
 import com.ust.user_service.exception.customExceptions.UserNotFoundException;
+import com.ust.user_service.modal.OrderNotification;
 import com.ust.user_service.modal.User;
+import com.ust.user_service.repository.OrderNotificationRepository;
 import com.ust.user_service.repository.UserRepository;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @Log4j2
 public class UserService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    OrderNotificationRepository orderNotificationRepository;
 
     public boolean createUser(UserRequest userRequest) {
         if(userRepository.existsByUserEmail(userRequest.getEmail())) {
@@ -48,6 +52,24 @@ public class UserService {
         } else {
             log.error("User not found");
             throw new UserNotFoundException("User not found!");
+        }
+    }
+
+    public void updateOrderStausNotification(OrderStatusEvent event) {
+        log.info("Received order notification event for : {} order", event.getOrderId());
+
+        OrderNotification notification = OrderNotification.builder()
+                .userId(event.getUserId())
+                .orderId(event.getOrderId())
+                .status(event.getStatus())
+                .remark(event.getRemark())
+                .build();
+
+        try {
+            orderNotificationRepository.save(notification);
+        } catch (Exception e) {
+            log.error("Failed to update order notification : {}", String.valueOf(e));
+            throw new RuntimeException(e);
         }
     }
 }
